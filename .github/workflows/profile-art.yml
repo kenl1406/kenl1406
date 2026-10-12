@@ -18,15 +18,32 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # GitHub sometimes answers with an error page, so the snake gets a second try
+      # and a failure never blocks the stats cards.
       - name: Contribution snake
+        id: snake
+        continue-on-error: true
         uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          outputs: |
+            dist/snake-dark.svg?palette=github-dark&color_snake=#2bbfa8&color_dots=#161b22,#0f3d39,#16695f,#22a594,#2bbfa8
+            dist/snake-light.svg?palette=github-light&color_snake=#0f7f70&color_dots=#ebedf0,#b3efe4,#6ad8c5,#25b19c,#0f7f70
+
+      - name: Contribution snake (retry)
+        if: steps.snake.outcome == 'failure'
+        continue-on-error: true
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           outputs: |
             dist/snake-dark.svg?palette=github-dark&color_snake=#2bbfa8&color_dots=#161b22,#0f3d39,#16695f,#22a594,#2bbfa8
             dist/snake-light.svg?palette=github-light&color_snake=#0f7f70&color_dots=#ebedf0,#b3efe4,#6ad8c5,#25b19c,#0f7f70
 
       - name: Stats card
+        continue-on-error: true
         uses: stats-organization/github-readme-stats-action@v2
         with:
           card: stats
@@ -35,6 +52,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Top languages card
+        continue-on-error: true
         uses: stats-organization/github-readme-stats-action@v2
         with:
           card: top-langs
@@ -46,6 +64,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dist profile
+          git add --all
           git commit -m "Refresh profile art & stats" || exit 0
           git push
