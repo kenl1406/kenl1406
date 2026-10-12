@@ -47,9 +47,9 @@ jobs:
         uses: stats-organization/github-readme-stats-action@v2
         with:
           card: stats
-          options: username=${{ github.repository_owner }}&show_icons=true&hide_border=true&border_radius=16&bg_color=0c141b&title_color=2bbfa8&text_color=c4d2d8&icon_color=2bbfa8&ring_color=2bbfa8
+          options: username=${{ github.repository_owner }}&count_private=true&custom_title=Kendal%27s%20GitHub%20Stats&show_icons=true&hide_border=true&border_radius=16&bg_color=0c141b&title_color=2bbfa8&text_color=c4d2d8&icon_color=2bbfa8&ring_color=2bbfa8
           path: profile/stats.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.STATS_TOKEN }}
 
       - name: Top languages card
         continue-on-error: true
@@ -58,7 +58,7 @@ jobs:
           card: top-langs
           options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide_border=true&border_radius=16&bg_color=0c141b&title_color=2bbfa8&text_color=c4d2d8
           path: profile/top-langs.svg
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.STATS_TOKEN }}
 
       - name: Commit the fresh art
         run: |
